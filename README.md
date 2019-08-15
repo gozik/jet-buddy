@@ -1,2 +1,2 @@
 # jet-buddy
-web application to deal with family spendings
+web application to manage family spendings
