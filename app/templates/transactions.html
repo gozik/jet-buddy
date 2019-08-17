@@ -1,8 +1,39 @@
-<!doctype html>
-    <title>Jet Buddy</title>
-    <body>
-        <h1>Transactions:</h1>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add Transaction</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.value.label }}<br>
+            {{ form.value(size=32) }}
+            {% for error in form.value.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.category.label }}<br>
+            {{ form.category(size=32) }}
+            {% for error in form.category.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.date.label }}<br>
+            {{ form.date(size=32) }}
+            {% for error in form.date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% if transactions %}
+        <h1>Added transactions:</h1>
         {% for trn in transactions %}
-        <div><p>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b></p></div>
+        <ul><li>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b> ({{ trn.category}})</li></ul>
         {% endfor %}
-    </body>
+    {% else %}
+        <div><p>There is no transaction in db yet.</p></div>
+    {% endif %}
+{% endblock %}
+

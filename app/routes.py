@@ -2,8 +2,9 @@ import os
 from flask import render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
-from app import app
+from app import app, db
 from app.models import Transaction
+from app.forms import TransactionForm
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = set(['txt', 'csv', 'xlsx'])
@@ -19,6 +20,14 @@ def upload_file():
             return redirect(url_for('upload_file', filename=filename))
     return render_template('index.html')
 
-@app.route('/transactions')
+@app.route('/transactions', methods=['GET', 'POST'])
 def transactions():
-    return render_template('transactions.html', transactions=Transaction.query.all())
+    form = TransactionForm()
+    if form.validate_on_submit():
+        trn = Transaction(payment_value=form.value.data, 
+                payment_date=form.date.data, 
+                category=form.category.data)
+        db.session.add(trn)
+        db.session.commit()
+        return redirect('/transactions')
+    return render_template('transactions.html', transactions=Transaction.query.all(), form=form)
