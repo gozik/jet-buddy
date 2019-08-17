@@ -1,1 +1,1 @@
-from app import app
+pipfrom app import app
