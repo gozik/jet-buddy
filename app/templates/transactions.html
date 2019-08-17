@@ -1,0 +1,8 @@
+<!doctype html>
+    <title>Jet Buddy</title>
+    <body>
+        <h1>Transactions:</h1>
+        {% for trn in transactions %}
+        <div><p>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b></p></div>
+        {% endfor %}
+    </body>
