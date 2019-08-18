@@ -29,5 +29,5 @@ def transactions():
                 category=form.category.data)
         db.session.add(trn)
         db.session.commit()
-        return redirect('/transactions')
+        return redirect(url_for('transactions'))
     return render_template('transactions.html', transactions=Transaction.query.all(), form=form)

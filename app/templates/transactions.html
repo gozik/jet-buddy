@@ -1,32 +1,9 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf%}
 
 {% block content %}
     <h1>Add Transaction</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.value.label }}<br>
-            {{ form.value(size=32) }}
-            {% for error in form.value.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.category.label }}<br>
-            {{ form.category(size=32) }}
-            {% for error in form.category.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.date.label }}<br>
-            {{ form.date(size=32) }}
-            {% for error in form.date.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+    {{ wtf.quick_form(form) }}
     {% if transactions %}
         <h1>Added transactions:</h1>
         {% for trn in transactions %}
