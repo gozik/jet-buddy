@@ -6,9 +6,11 @@
     {{ wtf.quick_form(form) }}
     {% if transactions %}
         <h1>Added transactions:</h1>
-        {% for trn in transactions %}
-        <ul><li>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b> ({{ trn.category}})</li></ul>
-        {% endfor %}
+        <ol>
+            {% for trn in transactions %}
+                <li>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b> ({{ trn.category}})</li>
+            {% endfor %}
+        </ol>
     {% else %}
         <div><p>There is no transaction in db yet.</p></div>
     {% endif %}
