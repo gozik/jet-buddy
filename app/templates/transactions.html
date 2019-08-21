@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf%}
 
-{% block content %}
+{% block page_content %}
     <h1>New Transaction</h1>
     {{ wtf.quick_form(form) }}
     {% if transactions %}

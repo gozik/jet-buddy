@@ -1,5 +1,5 @@
 import os
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
 from app import app, db
@@ -18,11 +18,16 @@ def index():
 def transactions():
     form = TransactionForm()
     if form.validate_on_submit():
-        trn = Transaction(payment_value=form.value.data, 
+        if Transaction.query.filter_by(payment_value=form.value.data, 
+                payment_date=form.date.data, 
+                category=form.category.data).first():
+            flash('Transaction has been added earlier.')
+        else:
+            trn = Transaction(payment_value=form.value.data, 
                 payment_date=form.date.data, 
                 category=form.category.data)
-        db.session.add(trn)
-        db.session.commit()
+            db.session.add(trn)
+            db.session.commit()
         return redirect(url_for('transactions'))
     return render_template('transactions.html', transactions=Transaction.query.all(), form=form)
 
