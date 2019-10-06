@@ -1,5 +1,7 @@
 from app import db
 
+import csv
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -25,3 +27,21 @@ class Transaction(db.Model):
     MCC = db.Column(db.Integer) #MCC
     description = db.Column(db.String(250)) #Описание
     bonus = db.Column(db.Float(precision=2)) #Бонусы (включая кэшбэк)
+
+
+class Transaction_Importer():
+    def __init__(self):
+        self.candidates = []
+
+    def read_csv_tinkoff(self, file):
+        with open(file, 'r') as f:
+            reader = csv.reader(f, delimiter=';')
+            headers = next(reader, None)
+            for row in reader:
+                self.candidates.append(dict(zip(headers, row)))
+
+    def check(self):
+        pass
+
+    def save(self, data):
+        pass
