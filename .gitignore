@@ -106,3 +106,4 @@ uploads
 .vscode 
 migrations 
 app.db 
+data

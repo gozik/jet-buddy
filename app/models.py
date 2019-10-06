@@ -1,5 +1,6 @@
 from app import db
 
+from datetime import datetime
 import csv
 
 class User(db.Model):
@@ -28,20 +29,32 @@ class Transaction(db.Model):
     description = db.Column(db.String(250)) #Описание
     bonus = db.Column(db.Float(precision=2)) #Бонусы (включая кэшбэк)
 
+    @staticmethod
+    def from_csv_tinkoff(file):
+        try:
+            with open(file, 'r', encoding='windows-1251') as f:
+                reader = csv.reader(f, delimiter=';')
+                headers = next(reader, None)
+                for row in reader:
+                    csv_dict = dict(zip(headers, row))
+                    transaction = Transaction(**{
+                        'operation_date': datetime.strptime(csv_dict["Дата операции"], "%d.%m.%Y %H:%M:%S"),
+                        'payment_date': datetime.strptime(csv_dict["Дата платежа"], "%d.%m.%Y").date() if csv_dict["Дата платежа"] else None,
+                        'card_tail': csv_dict["Номер карты"],
+                        'status': csv_dict["Статус"],
+                        'operation_value': float(csv_dict["Сумма операции"].replace(',', '.')),
+                        'operation_currency': csv_dict["Валюта операции"],
+                        'payment_value': float(csv_dict["Сумма платежа"].replace(',', '.')),
+                        'payment_currency': csv_dict["Валюта платежа"],
+                        'cashback': float(csv_dict["Кэшбэк"].replace(',', '.')) if csv_dict["Кэшбэк"] else None,
+                        'category': csv_dict["Категория"],
+                        'MCC': int(csv_dict["MCC"]) if csv_dict["MCC"] else None,
+                        'description': csv_dict["Описание"],
+                        'bonus': float(csv_dict["Бонусы (включая кэшбэк)"].replace(',', '.')) if csv_dict["Бонусы (включая кэшбэк)"] else None,
+                    })
+                    db.session.add(transaction)
+                db.session.commit()
+        except Exception as ex:
+            db.session.rollback()
+            raise ex
 
-class Transaction_Importer():
-    def __init__(self):
-        self.candidates = []
-
-    def read_csv_tinkoff(self, file):
-        with open(file, 'r') as f:
-            reader = csv.reader(f, delimiter=';')
-            headers = next(reader, None)
-            for row in reader:
-                self.candidates.append(dict(zip(headers, row)))
-
-    def check(self):
-        pass
-
-    def save(self, data):
-        pass
