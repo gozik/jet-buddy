@@ -5,14 +5,29 @@
     <h1>New Transaction</h1>
     {{ wtf.quick_form(form) }}
     {% if transactions %}
-        <h1>Added transactions:</h1>
-        <ol>
-            {% for trn in transactions %}
-                <li>{{ trn.payment_date }}: <b>{{ trn.payment_value }}</b> ({{ trn.category}})</li>
-            {% endfor %}
-        </ol>
+        <table class="table table-sm table-hover">
+            <caption>Added transactions</caption>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Сумма</th>
+                    <th scope="col">Категория</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trn in transactions %}
+                <tr>
+                    <th scope="row">{{ trn.id }}</th>
+                    <td>{%if trn.operation_date %}{{ trn.operation_date.strftime('%d.%m.%Y') }}{% endif %}</td>
+                    <td>{{ trn.payment_value|float }}</td>
+                    <td>{{ trn.category}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
-        <div><p>There is no transaction in db yet.</p></div>
+        <div><p>There is no transaction in db yet. Add one.</p></div>
     {% endif %}
 {% endblock %}
 
